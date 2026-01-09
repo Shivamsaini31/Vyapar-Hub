@@ -101,7 +101,7 @@ const userSchema= new mongoose.Schema<IUser>({
             ref:"Product"
         },
         quantity:{
-            type:number,
+            type:Number,
             default:1
         }
     }],
