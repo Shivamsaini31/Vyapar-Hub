@@ -34,7 +34,5 @@ export async function POST(req:NextRequest){
             {message:"Internal Server Error"},
             {status:500}
         )
-    }
-    
-    
+    } 
 }
