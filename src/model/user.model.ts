@@ -13,7 +13,7 @@ interface IUser{
     //for vendor
     shopName?:string;
     shopAddress?:string;
-    gstNumber?:number;
+    gstNumber?:string;
     isApproved?: boolean;
     verificationStatus?: "pending" | "approved" | "rejected";
     requestedAt?: Date;
@@ -28,8 +28,8 @@ interface IUser{
         quantity:number;
     }[];
 
-    createdAt?:number;
-    updatedAt?:number;
+    createdAt?:Date;
+    updatedAt?:Date;
 };
 
 
@@ -55,6 +55,7 @@ const userSchema= new mongoose.Schema<IUser>({
     role:{
         type: String,
         enum:["user","vendor","admin"],
+        default:"user",
         required:true,
     },
     shopName:{
@@ -64,7 +65,7 @@ const userSchema= new mongoose.Schema<IUser>({
         type:String,
     },          
     gstNumber:{
-        type:Number,
+        type:String,
     },  
     isApproved:{                
         type:Boolean,
@@ -91,13 +92,13 @@ const userSchema= new mongoose.Schema<IUser>({
         ref:"Product"
     }],
     orders:[{
-        types:mongoose.Schema.Types.ObjectId,
-        ref:"Orders"
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Order"
     }],
 
     cart:[{
         product:{
-            types:mongoose.Schema.Types.ObjectId,
+            type:mongoose.Schema.Types.ObjectId,
             ref:"Product"
         },
         quantity:{

@@ -1,7 +1,7 @@
 npx create-next-app@latest 
 
-Packages to be installed:
-npm i mongoose, dotenv
+Packages and middlewares to be installed:
+npm i mongoose dotenv bcryptjs jsonwebtoken cookie-parser axios
 
 Start with creating required models(app/model)
 1. User model(model/user.model.ts)
