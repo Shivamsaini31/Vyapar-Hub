@@ -26,6 +26,7 @@ export async function POST(req:NextRequest){
     });
     return NextResponse.json(
         {message:"User registered successfully", userId:newUser._id},
+        
         {status:201}
     );
     } catch(error){

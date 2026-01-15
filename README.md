@@ -1,7 +1,7 @@
 npx create-next-app@latest 
 
 Packages and middlewares to be installed:
-npm i mongoose dotenv bcryptjs jsonwebtoken cookie-parser axios next-auth@beta
+npm i mongoose dotenv bcryptjs jsonwebtoken cookie-parser axios next-auth@beta motion react-icons react-spinners
 
 Start with creating required models(app/model)
 1. User model(model/user.model.ts)
@@ -36,3 +36,6 @@ Other providers like google, github, etc. can also be used.
 JWT->session->Frontend
 6. session functions defines the strategy and maxAge of session. We use the strategy as "jwt", so there are no DB sessions and everything is stored in JWT. maxAge can be used to define the max time a user stays login.
 7. pages are used to define the routes where login, error redirection, etc takes place.
+
+
+Now, Designing the register/login page
