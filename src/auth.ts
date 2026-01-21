@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import connectDB from "./lib/connectDB";
 import User from "./model/user.model";
 import bcrypt from "bcryptjs";
+import Google from "next-auth/providers/google";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -33,8 +34,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         };
       },
     }),
+    Google({
+      clientId:process.env.AUTH_GOOGLE_ID,
+      clientSecret:process.env.AUTH_GOOGLE_SECRET
+    })
   ],
   callbacks: {
+    async signIn({user,account}){
+      if(account?.provider =="google"){
+        await connectDB();
+        let DBUser= await User.findOne({email:user.email});
+        if(!DBUser){
+          DBUser=await User.create({
+            name:user.name,
+            email:user.email,
+            image:user.image
+          })
+        }
+        user.id=DBUser._id.toString();
+        user.role=DBUser.role.toString();
+      }
+      return true;
+    },
+
     //the user defined in next-auth has several properties. But it doesn't specifically have role defined. 
     // Therefore, we need to create our own user in @/next-auth.d.ts
     jwt({ token, user }) {
@@ -65,5 +87,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     maxAge: 10*24*60*60*1000,
   },
   secret: process.env.AUTH_SECRET,
-
 });

@@ -8,6 +8,7 @@ import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
+import { signIn } from "next-auth/react";
 
 function Register() {
   const [step, setStep] = useState<1 | 2>(1);
@@ -131,6 +132,7 @@ function Register() {
             <div className="h-px bg-gray-400 w-45 ml-2"></div>
           </div>
           <motion.button 
+          onClick={()=>signIn("google",{callbackUrl:"/"})}
         type='button'
           whileTap={{opacity:0.7,scale:0.95}}
           whileHover={{opacity:1, scale:1.05}}
@@ -142,13 +144,11 @@ function Register() {
             Already have an account?{' '}
             <span 
             onClick={()=>router.push("/login")}
-            className="text-blue-400 hover:underline transition hover:text-blue-300">
+            className="text-blue-400 hover:underline hover:cursor-pointer transition hover:text-blue-300">
               SignIn
             </span>
           </p>
         </form>
-        
-        
         </motion.div>}
       </AnimatePresence>
     </div>

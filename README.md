@@ -39,3 +39,11 @@ JWT->session->Frontend
 
 
 Now, Designing the register/login page
+
+Note: we need to wrap children in SessionProvider to use useSession() hook. Since SessionProvider works only in client component, we setup another file as Provider.tsx and wrap the children in the main layout under Provider. Using this, we wrap the children in SessionProvider so that the useSession hook works perfectly.
+
+Follow steps on Auth.js to use google provider for authentication.
+After declaring Google provider in auth.ts, we need to access clientId and clientSecret from the environment variables. Now to create this user in mongoDB, we need to define the callback async signIn().
+
+Starting with Next.js 16, Middleware is now called Proxy to better reflect its purpose. The functionality remains the same.
+Proxy allows you to run code before a request is completed. Then, based on the incoming request, you can modify the response by rewriting, redirecting, modifying the request or response headers, or responding directly.
