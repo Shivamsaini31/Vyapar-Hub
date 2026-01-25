@@ -27,9 +27,17 @@ function SignIn() {
             password,
             redirect:false
         });
-        alert("Signed in successfully");
+        
         setLoading(false);
-        router.push("/");
+          if (result?.error) {
+    setErr("Invalid email or password"); 
+    return;
+  }
+
+  if (result?.ok) {
+    router.push("/");
+    alert("Signed in successfully");
+  }
     } catch (error) {
       console.log("Error in user signIn:", error);
       if (axios.isAxiosError(error) && error.response) {
@@ -49,7 +57,7 @@ function SignIn() {
           exit={{ opacity: 0, y: -40 }}
         >
           <h1 className="text-2xl font-semibold text-center mb-6 text-gray-300">
-            Welcome Back to <span className="text-blue-600">MultiCart</span>
+            Welcome Back to <span className="text-blue-600">VyaparX</span>
           </h1>
           <form
           onSubmit={handleSignIn}

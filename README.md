@@ -37,6 +37,14 @@ JWT->session->Frontend
 6. session functions defines the strategy and maxAge of session. We use the strategy as "jwt", so there are no DB sessions and everything is stored in JWT. maxAge can be used to define the max time a user stays login.
 7. pages are used to define the routes where login, error redirection, etc takes place.
 
+Note: NextAuth() doesn't return an error when your credentials are wrong. It instead returns an object like this:
+{
+  ok: boolean,
+  error: string | null,
+  status: number,
+  url: string | null
+}
+Therefore, to know if there is any error in the login process, we must separately check for (result?.error) and handle it accordingly. Otherwise, if result?.ok, then we can proceed to the next step.
 
 Now, Designing the register/login page
 
@@ -47,3 +55,6 @@ After declaring Google provider in auth.ts, we need to access clientId and clien
 
 Starting with Next.js 16, Middleware is now called Proxy to better reflect its purpose. The functionality remains the same.
 Proxy allows you to run code before a request is completed. Then, based on the incoming request, you can modify the response by rewriting, redirecting, modifying the request or response headers, or responding directly.
+
+
+Note: We need to inform the next.js if we are importing or displaying images from elsewhere. Like while developing the navbar, we need user image from their google account or somewhere from cloud, then we need to specify the sources of our images or their hostnames in next.config.ts.
