@@ -93,6 +93,7 @@ function Navbar({ user }: { user: IUser }) {
               )}
             </AnimatePresence>
           </div>
+          {user.role=="user" && <CartButton router={router} count={5}/>}
         </div>
       </div>
     </div>
@@ -113,7 +114,7 @@ const NavItem = ({ label, path, router }: any) => (
 );
 
 const IconBtn = ({ Icon, onClick }: any) => (
-  <motion.button whileHover={{ scale: 1.1 }} onClick={onClick}>
+  <motion.button whileHover={{ scale: 1.1,cursor:"pointer" }} onClick={onClick}>
     <Icon size={24} />
   </motion.button>
 );
@@ -124,3 +125,15 @@ const DropDownBtn=({Icon, label, onClick}:any)=>(
     <Icon size={20}/>{label}
     </button>
 );
+
+const CartButton=({router,count}:any)=>(
+  <motion.div className="relative" whileHover={{scale:1.1}} onClick={()=>router.push("/cart")}>
+    <AiOutlineShoppingCart size={24}/>
+    {count>0&&(
+      <div className="absolute bg-blue-500 px-1 text-xs -top-2 -right-2 rounded-full text-white">
+        {count}
+      </div>
+    )
+      }
+  </motion.div>
+)
