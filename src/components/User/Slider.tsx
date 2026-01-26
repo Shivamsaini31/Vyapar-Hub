@@ -37,7 +37,7 @@ function Slider() {
         },5000)
         return ()=>clearInterval(interval);
     },
-    )
+    [])
   return (
     <div className="relative w-full min-h-[90vh] mt-0 overflow-hidden rounded-2xl bg-black text-white md:mt-[60px] pt-0 top-0">
       <AnimatePresence>
@@ -92,6 +92,7 @@ function Slider() {
         {
             slides.map((slide,index)=>(
                 <motion.div 
+                key={index}
                 whileHover={{scale:1.1}}
                 whileTap={{scale:0.95}}
                 onClick={()=>setCurr(index)}

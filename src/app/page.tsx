@@ -12,7 +12,7 @@ import AdminDashboard from "@/components/Admin/AdminDashboard";
 export default async function Home() {
   await connectDB();
   const session = await auth();
-  const user = await User.findById(session?.user?.id).lean();
+  const user = await User.findById(session?.user?.id);
   if (!user) {
     redirect("/login");
   }
