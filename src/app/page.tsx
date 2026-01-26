@@ -5,6 +5,9 @@ import User from "@/model/user.model";
 import { redirect } from "next/navigation";
 import EditRoleAndPhone from "@/components/EditRoleAndPhone";
 import Navbar from "@/components/Navbar";
+import UserDashboard from "@/components/User/UserDashboard";
+import VendorDashboard from "@/components/Vendor/VendorDashboard";
+import AdminDashboard from "@/components/Admin/AdminDashboard";
 
 export default async function Home() {
   await connectDB();
@@ -23,5 +26,6 @@ export default async function Home() {
   bg-gradient-to-br from-gray-900 via-black to-gray-900 font-sans flex-col">
 
     <Navbar user={plainUser}/>
+    {user.role=="user" ? <UserDashboard/>: user.role=="vendor"? <VendorDashboard/> : <AdminDashboard/>}
   </div>;
 }

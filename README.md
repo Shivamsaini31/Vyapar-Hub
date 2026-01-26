@@ -58,3 +58,11 @@ Proxy allows you to run code before a request is completed. Then, based on the i
 
 
 Note: We need to inform the next.js if we are importing or displaying images from elsewhere. Like while developing the navbar, we need user image from their google account or somewhere from cloud, then we need to specify the sources of our images or their hostnames in next.config.ts.
+
+To remove scroll bar, we need to update globals.css. 
+::-webkit-scrollbar{
+    display:none;
+}
+*{
+    scrollbar-width:none;
+}
