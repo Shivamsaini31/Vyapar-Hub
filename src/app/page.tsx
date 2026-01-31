@@ -8,6 +8,7 @@ import Navbar from "@/components/Navbar";
 import UserDashboard from "@/components/User/UserDashboard";
 import VendorDashboard from "@/components/Vendor/VendorDashboard";
 import AdminDashboard from "@/components/Admin/AdminDashboard";
+import Footer from "@/components/Footer";
 
 export default async function Home() {
   await connectDB();
@@ -27,5 +28,6 @@ export default async function Home() {
 
     <Navbar user={plainUser}/>
     {user.role=="user" ? <UserDashboard/>: user.role=="vendor"? <VendorDashboard/> : <AdminDashboard/>}
+    <Footer user={plainUser}/>
   </div>;
 }
