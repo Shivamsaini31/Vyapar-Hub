@@ -27,7 +27,7 @@ function Footer({ user }: { user: IUser }) {
             transition"
             onClick={() => router.push("/")}
           >
-            VyaparX
+            VyaparHub
           </h2>
           <p className="text-sm leading-relaxed text-gray-400">
             Smart, secure & scalable multi-vendor eCommerce platform built for
@@ -125,13 +125,13 @@ function Footer({ user }: { user: IUser }) {
           <h3 className="text-white text-lg font-semibold mb-4">
             Contact Info
           </h3>
-          <p className="text-sm">admin@vyaparx.com</p>
+          <p className="text-sm">admin@vyaparhub.com</p>
           <p className="text-sm">+91 9991285063</p>
           <p className="text-sm">Kurukshetra, Haryana, India</p>
         </div>
       </div>
       <div className="text-center text-xs text-gray-500 mt-12 border-t border-gray-700 pt-4">
-        ©{new Date().getFullYear()} VyaparX - Powered by Secure Commerce Engine
+        ©{new Date().getFullYear()} VyaparHub - Powered by Secure Commerce Engine
       </div>
     </div>
   );

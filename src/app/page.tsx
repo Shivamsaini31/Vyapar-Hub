@@ -9,6 +9,7 @@ import UserDashboard from "@/components/User/UserDashboard";
 import VendorDashboard from "@/components/Vendor/VendorDashboard";
 import AdminDashboard from "@/components/Admin/AdminDashboard";
 import Footer from "@/components/Footer";
+import EditVendorDetails from "@/components/Vendor/EditVendorDetails";
 
 export default async function Home() {
   await connectDB();
@@ -21,6 +22,12 @@ export default async function Home() {
     !user.role || !user.phone || (!user.phone && user.role == "user");
   if (inComplete) {
     return <EditRoleAndPhone />;
+  }
+  if(user.role=="vendor"){
+    const inCompleteDetails= !user.shopName || ! user.shopAddress || !user.gstNumber;
+    if(inCompleteDetails){
+      return <EditVendorDetails/>
+    }
   }
   const plainUser=JSON.parse(JSON.stringify(user));
   return <div className="flex min-h-screen items-center justify-center 

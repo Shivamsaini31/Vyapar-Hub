@@ -37,7 +37,7 @@ function Navbar({ user }: { user: IUser }) {
         >
           <Image src={logo} alt="logo" width={60} height={80} className="" />
           <span className="text-xl font-semibold hidden sm:inline">
-            VyaparX
+            VyaparHub
           </span>
         </div>
         {user.role === "user" && (

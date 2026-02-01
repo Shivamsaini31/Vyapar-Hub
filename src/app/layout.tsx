@@ -3,7 +3,7 @@ import "./globals.css";
 import Provider from "@/Provider";
 
 export const metadata: Metadata = {
-  title: "VyaparX",
+  title: "VyaparHub",
   description: "Multi-vendor E-commerce platform",
 };
 
