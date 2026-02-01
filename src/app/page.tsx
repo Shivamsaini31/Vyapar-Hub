@@ -10,6 +10,7 @@ import VendorDashboard from "@/components/Vendor/VendorDashboard";
 import AdminDashboard from "@/components/Admin/AdminDashboard";
 import Footer from "@/components/Footer";
 import EditVendorDetails from "@/components/Vendor/EditVendorDetails";
+import VendorPage from "@/components/Vendor/VendorPage";
 
 export default async function Home() {
   await connectDB();
@@ -34,7 +35,7 @@ export default async function Home() {
   bg-gradient-to-br from-gray-900 via-black to-gray-900 font-sans flex-col">
 
     <Navbar user={plainUser}/>
-    {user.role=="user" ? <UserDashboard/>: user.role=="vendor"? <VendorDashboard/> : <AdminDashboard/>}
+    {user.role=="user" ? <UserDashboard/>: user.role=="vendor"? <VendorPage user={plainUser}/> : <AdminDashboard/>}
     <Footer user={plainUser}/>
   </div>;
 }
