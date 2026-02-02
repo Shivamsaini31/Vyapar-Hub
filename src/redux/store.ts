@@ -1,9 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userSlice from './userSlice'
+import vendorSlice from './vendorSlice'
+import { vendored } from 'next/dist/server/route-modules/pages/module.compiled'
 
 export const store = configureStore({
   reducer: {
     user: userSlice,
+    vendor: vendorSlice,
   },
 })
 
