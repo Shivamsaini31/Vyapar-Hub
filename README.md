@@ -2,6 +2,7 @@ npx create-next-app@latest
 
 Packages and middlewares to be installed:
 npm i mongoose dotenv bcryptjs jsonwebtoken cookie-parser axios next-auth@beta motion react-icons react-spinners
+react-redux @reduxjs/toolkit
 
 Start with creating required models(app/model)
 1. User model(model/user.model.ts)
@@ -66,3 +67,10 @@ To remove scroll bar, we need to update globals.css.
 *{
     scrollbar-width:none;
 }
+
+Setting up Redux
+follow Typescript quick start documentation.
+pkg's req'd: react-redux, @reduxjs/toolkit
+We need to create a redux/store.ts and redux/StoreProvider.tsx.
+A separate provider is required because we need to have "use client" features while the main layout.tsx is a server component. Therefore, we can create a separate StoreProvider component which is a client component and then wrap the children in the main layout in this StoreProvider.
+
