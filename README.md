@@ -68,6 +68,22 @@ To remove scroll bar, we need to update globals.css.
     scrollbar-width:none;
 }
 
+Redux solves an important problem: 
+Sharing and controlling state across many parts of your app in a predictable way
+(State is data that can change over time)
+Redux gives you:
+- One central store (single source of truth)
+- Predictable updates
+- Global access to state
+- Time-travel debugging (DevTools)
+- Decoupled UI & data logic
+
+Core Redux concepts:
+- Store: The global state container.
+- Actions: Plain objects describing what happened.
+- Reducers: Pure functions that decide how state changes.
+- Dispatch: The only way to change state.
+
 Setting up Redux
 follow Typescript quick start documentation.
 pkg's req'd: react-redux, @reduxjs/toolkit

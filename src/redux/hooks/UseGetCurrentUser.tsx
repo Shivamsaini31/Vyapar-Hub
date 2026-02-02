@@ -11,7 +11,7 @@ function UseGetCurrentUser() {
     const fetchUser=async()=>{
         try {
             const res=await axios.get("/api/user/getCurrentUser");
-            console.log("Current user:", res.data);
+            // console.log("Current user:", res.data);
             if(res?.data)dispatch(setUserData(res.data));
         } catch (error) {
             console.log(`Error fetching current user: ${error}`);

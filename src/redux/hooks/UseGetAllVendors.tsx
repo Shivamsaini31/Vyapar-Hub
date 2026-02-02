@@ -11,8 +11,8 @@ function UseGetAllVendors() {
     const fetchVendors=async()=>{
         try {
             const res=await axios.get("api/vendor/getAllVendors");
-            console.log("Vendors:", res.data);
-            if(res?.data)dispatch(setAllVendorsData(res.data));
+            // console.log("Vendors:", res.data);
+            if(res?.data)dispatch(setAllVendorsData(res.data.vendors));
         } catch (error) {
             console.log(`Error fetching vendors: ${error}`);
             dispatch(setAllVendorsData([]));

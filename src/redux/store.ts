@@ -6,7 +6,7 @@ import { vendored } from 'next/dist/server/route-modules/pages/module.compiled'
 export const store = configureStore({
   reducer: {
     user: userSlice,
-    vendor: vendorSlice,
+    vendors: vendorSlice,
   },
 })
 
