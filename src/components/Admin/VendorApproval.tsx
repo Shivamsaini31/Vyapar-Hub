@@ -18,6 +18,13 @@ function VendorApproval() {
   allVendorsData.filter((vendor)=>vendor.verificationStatus==="pending"):[];
   const [selectedVendor, setSelectedVendor] = useState<IUser | null>(null); 
   const [loading, setLoading]=useState(false);
+  const [rejectModel, setRejectModel]= useState(false);
+  const [rejectReason, setRejectReason]= useState("");  
+
+  const openRejectReasonArea=()=>{
+    setRejectModel(true);
+    setRejectReason("");
+  }
   const handleApproved=async()=>{
     if(!selectedVendor)return;  
     setLoading(true);
@@ -35,6 +42,28 @@ function VendorApproval() {
       console.log(`Error approving vendor: ${error}`);
       setLoading(false);
       alert("Approval failed.")
+    }
+  }
+  const handleRejected=async()=>{
+    if(!selectedVendor)return;  
+    setLoading(true);
+    try {
+      const res=await axios.post("/api/admin/update-vendor-status", {
+        vendorId: selectedVendor._id,
+        status: "rejected",
+        rejectedReason: rejectReason
+      });
+      const updated= allVendorsData.filter((v)=>v._id !==selectedVendor._id);
+      dispatch(setAllVendorsData(updated));
+      setSelectedVendor(null);
+      setLoading(false);
+      setRejectModel(false);
+      alert("Vendor rejected successfully!");
+    } catch (error) {
+      console.log(`Error rejecting vendor: ${error}`);
+      setLoading(false);
+      setRejectModel(false);
+      alert("Rejection failed.")
     }
   }
 
@@ -143,8 +172,48 @@ function VendorApproval() {
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3 mt-6">
                   <button disabled={loading}className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 rounded-md text-sm" onClick={handleApproved}>{loading? <ClipLoader size={22}/>: "Approve"}</button>
-                  <button className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-sm">Reject</button>
+                  <button className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-sm" onClick={openRejectReasonArea}>Reject</button>
                   <button className="flex-1 px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-md text-sm" onClick={()=>setSelectedVendor(null)}>Cancel</button>
+                </div>
+              </motion.div>
+
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+
+
+        <AnimatePresence>
+          {rejectModel &&(
+            <motion.div
+            initial={{opacity:0}} 
+            animate={{opacity:1}}
+            exit={{opacity:0}}
+            transition={{duration:0.3}}
+            className="fixed inset-0 bg-black/70 flex items-center justify-center z-50
+            px-4">
+              <motion.div
+              initial={{scale:0.9}}
+              animate={{scale:1}}
+              exit={{scale:0.9}}
+              transition={{duration:0.6}}
+              className="bg-gray-900 p-6 rounded-2xl w-full
+              max-w-lg border border-white/10">
+                <h3 className="text-xl sm:text-2xl font-bold mb-4">Enter Reject Reason: </h3>
+                <textarea
+                placeholder="Enter reason for rejecting the vendor"
+                 className="w-full bg-white/10 border border-white/20 rounded-lg p-3 text-sm"
+                 rows={3}
+                 onChange={(e)=>setRejectReason(e.target.value)}
+                 value={rejectReason}/>
+  
+                <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                
+                  <button
+                  disabled={loading}
+                   className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-sm" onClick={handleRejected}>
+                    {loading?<ClipLoader size={22}/>:"Confirm Reject"}</button>
+                  <button className="flex-1 px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-md text-sm" onClick={()=>setRejectModel(false)}>Cancel</button>
                 </div>
               </motion.div>
 
