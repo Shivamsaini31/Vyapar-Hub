@@ -171,6 +171,7 @@ function Profile() {
                 <motion.button
                 whileHover={{scale:1.02}}
                 onClick={handleSubmit}
+                disabled={loading}
                 className=" w-full bg-blue-700 hover:bg-gray-700 py-3 rounded-lg font-semibold">
                     {loading? <ClipLoader size={20} color='white'/>: "Update Shop Details"}
                 </motion.button>
