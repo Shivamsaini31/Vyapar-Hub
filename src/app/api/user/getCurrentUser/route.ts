@@ -12,7 +12,7 @@ export  async function GET() {
         if(!user){
             return new Response(JSON.stringify({message:"User not found"}), {status:404});
         }
-        return new NextResponse(JSON.stringify({user}), {status:200});
+        return NextResponse.json(user,{status:200});
 
     } catch (error) {
         return new NextResponse(JSON.stringify({message:`Get current user error: ${error}`}), {status:500}); 

@@ -24,6 +24,7 @@ export async function POST(req:NextRequest){
                     shopName:shopName,
                     shopAddress:shopAddress,
                     gstNumber:gstNumber,
+                    verificationStatus:"pending",
                     requestedAt: new Date(),
                 
             },
