@@ -1,4 +1,4 @@
-export const runtime = "nodejs";
+// export const runtime = "nodejs";
 
 import { auth } from "@/auth";
 import uploadOnCloudinary from "@/lib/cloudinary";
@@ -11,14 +11,16 @@ export async function POST(req: NextRequest) {
     await connectDB();
 
     const session = await auth();
-    if (!session?.user?.email) {
+    if (!session || !session?.user?.email) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const formData = await req.formData();
+    // console.log("Received form data:", formData);
     const name = formData.get("name") as string;
     const phone = formData.get("phone") as string;
     const file = formData.get("image") as File | null;
+    // console.log("image: ", file);
 
     if (!name || !phone) {
       return NextResponse.json(
@@ -30,6 +32,7 @@ export async function POST(req: NextRequest) {
     let imageUrl: string | null = null;
     if (file) {
       imageUrl = await uploadOnCloudinary(file);
+      console.log("Uploaded image URL:", imageUrl);
       if (!imageUrl) {
         return NextResponse.json(
           { message: "Image upload failed" },
