@@ -1,15 +1,15 @@
 "use client"
 import UseGetCurrentUser from '@/redux/hooks/UseGetCurrentUser'
-import { RootState } from '@/redux/store'
-import { AnimatePresence,motion } from 'motion/react'
+import { AppDispatch, RootState } from '@/redux/store'
+import { motion } from 'motion/react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
-import { AiOutlineUser } from 'react-icons/ai'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import defaultProfile from "@/assets/defaultProfile.png"
 import axios from 'axios'
 import { ClipLoader } from 'react-spinners'
+import { setUserData } from '@/redux/userSlice'
 function Profile() {
     UseGetCurrentUser();
     const user=useSelector((state:RootState)=>state.user.userData);
@@ -24,6 +24,14 @@ function Profile() {
     const [shopAddress,setShopAddress]=useState(user?.shopAddress ||"");
     const [gstNumber,setGstNumber]=useState(user?.gstNumber ||"");
     const [loading,setLoading]=useState(false);
+    const dispatch=useDispatch<AppDispatch>();
+    useEffect(() => {
+  if (user) {
+    setName(user.name || "");
+    setPhone(user.phone || "");
+    setPreviewImage(user.image || defaultProfile);
+  }
+}, [user]);
 
     const handlePreviewImage=(e:React.ChangeEvent<HTMLInputElement>)=> {
         const file=e.target.files?.[0];
@@ -54,9 +62,28 @@ function Profile() {
       console.log(`Error updating vendor details: ${error}`);
     }
   }
-    // console.log(user);
+    const handleProfileUpdate=async()=>{
+        const formData=new FormData();
+        formData.append("name", name);
+        formData.append("phone", phone);
+        if(profileImage) formData.append("image", profileImage);
+        setLoading(true);
+        try {
+            const res=await axios.post("/api/user/update-profile", formData);
+            dispatch(setUserData(res.data));
+            console.log(res);
+            setLoading(false);
+            alert("Profile Updated succesfully!✅");
+            setProfileImage(null);
+        } catch (error) {
+            console.log(`Error updating profile ${error}`);
+            setLoading(false);
+            alert("Error updating profile!")
+        }
+    }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-600 via-black to-gray-600 text-white px-4 pt-24 pb-10">
+    <div className="min-h-screen bg-linear-to-br from-gray-600 via-black to-gray-600 text-white px-4 pt-24 pb-10">
       <motion.div
       initial={{scale:0.9,opacity:0}}
       animate={{scale:1, opacity:1}}
@@ -141,8 +168,10 @@ function Profile() {
                 value={phone}/>
                 <motion.button
                 whileHover={{scale:1.02}}
+                onClick={handleProfileUpdate}
+                disabled={loading}
                 className=" w-full bg-blue-700 hover:bg-gray-700 py-3 rounded-lg font-semibold">
-                    Update Profile
+                    {loading?<ClipLoader size={20}/>:"Update Profile"}
                 </motion.button>
             </div>
         </motion.div>

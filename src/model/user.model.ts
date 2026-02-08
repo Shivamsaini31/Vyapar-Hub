@@ -7,7 +7,7 @@ export interface IUser{
     email:string;
     password?:string;
     image?:string;
-    phone?:number;
+    phone?:string;
     role: "user" | "vendor" | "admin";
 
     //for vendor
@@ -50,7 +50,7 @@ const userSchema= new mongoose.Schema<IUser>({
         type: String
     },
     phone:{
-        type:Number
+        type:String,
     },
     role:{
         type: String,
