@@ -37,5 +37,5 @@ export default async function Home() {
     <Navbar user={plainUser}/>
     {user.role=="user" ? <UserDashboard/>: user.role=="vendor"? <VendorPage user={plainUser}/> : <AdminDashboard/>}
     <Footer user={plainUser}/>
-  </div>;
+  </div>
 }

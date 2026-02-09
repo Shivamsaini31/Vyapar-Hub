@@ -134,7 +134,7 @@ function Footer({ user }: { user: IUser }) {
         ©{new Date().getFullYear()} VyaparHub - Powered by Secure Commerce Engine
       </div>
     </div>
-  );
+  )
 }
 
-export default Footer;
+export default Footer
