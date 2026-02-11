@@ -3,6 +3,10 @@ import React, { useState } from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import { FiUpload } from "react-icons/fi";
+import axios from "axios";
+import { routerServerGlobal } from "next/dist/server/lib/router-utils/router-server-context";
+import { useRouter } from "next/navigation";
+import { ClipLoader } from "react-spinners";
 
 function AddVendorProduct() {
   const categories = [
@@ -41,6 +45,8 @@ function AddVendorProduct() {
   const [detailPoints,setDetailPoints]=useState<string[]>([]);
   const [currPoint,setCurrPoint]=useState<string>("");
   const [pointIndex, setPointIndex]=useState(0);
+  const [loading, setLoading]=useState(false);
+  const router=useRouter();
   const handleRemove=(i:number)=>{
     setDetailPoints((prev)=>
     prev.filter((_,idx)=>idx!==i));
@@ -49,6 +55,57 @@ function AddVendorProduct() {
 
   const toggleSizes=(size:string)=>{
     setSizes((prev)=>prev.includes(size)?prev.filter((s)=>s!==size): [...prev,size])
+  }
+
+  const handleSubmit=async()=>{
+    if(!title || !description || !price || !stock || !category || !image1 || !image2 || !image3 || !image4){
+      alert("All fields are required!");
+      return;
+    }
+    if(isWearable && sizes.length===0){
+      alert("Please provide at least one size.")
+      return;
+    }
+    setLoading(true);
+    const formData=new FormData;
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("stock", stock);
+    formData.append(
+
+      "category",
+      category==="Others"?customCategory:category
+
+    )
+    formData.append("isWearable", String(isWearable));
+    sizes.forEach((size)=>formData.append("sizes",size));
+    formData.append("replacementDays",replacementDays);
+    formData.append("freeDelivery",String(freeDelivery));
+    formData.append("warranty",warranty);
+    formData.append("payOnDelivery",String(payOnDelivery));
+    detailPoints.forEach((point)=>formData.append("detailPoints",point));
+    if(image1 && image2 && image3 && image4){
+      formData.append("image1",image1);
+      formData.append("image2",image2);
+      formData.append("image3",image3);
+      formData.append("image4",image4);
+    }
+
+    try {
+      const result=await axios.post("/api/vendor/addProduct",formData);
+      console.log(result.data);
+      setLoading(false);
+      alert(`✅Product added succesfully!
+        Waiting for admin approval`);
+      router.push("/");
+    } catch (error) {
+      setLoading(false);
+      console.log(`Error in adding product: ${error}`);
+      alert("❌ Product add failed!")
+    }
+    
+
   }
   return (
     <div className="px-4 pt-20 pb-10 bg-gradient-to-br from-gray-600 via-black to-gray-600 text-white min-h-screen">
@@ -285,7 +342,9 @@ function AddVendorProduct() {
         whileHover={{scale:1.02}}
         whileTap={{scale:0.95}}
         type="submit"
-         className="w-full mt-8 bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-semibold">Add Product</motion.button>
+        onClick={handleSubmit}
+        disabled={loading}
+         className="w-full mt-8 bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-semibold">{loading ?<ClipLoader size={22}/>: "Add Product"}</motion.button>
 
       </motion.div>
     </div>
