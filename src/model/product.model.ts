@@ -26,7 +26,7 @@ export interface IProduct{
 
     isActive?:boolean;
 
-    replacementDays?: number;
+    replacementDays?: string;
     freeDelivery?:boolean;
     payOnDelivery?:boolean;
     warranty?: string;
@@ -105,7 +105,7 @@ const productSchema= new mongoose.Schema<IProduct>({
         type:Boolean, default:false
     },
     replacementDays:{
-        type:Number,
+        type:String,
         default:0,
     },
     freeDelivery:{
@@ -128,13 +128,13 @@ const productSchema= new mongoose.Schema<IProduct>({
         user:{
             type:mongoose.Schema.Types.ObjectId,
             ref:"User",
-            required:true,
+            // required:true,
         },
         rating:{
             type:Number,
             min:1,
             max:5,
-            required:true
+            // required:true
         },
         comment:{
             type:String,

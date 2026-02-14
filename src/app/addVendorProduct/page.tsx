@@ -311,6 +311,17 @@ function AddVendorProduct() {
         </div>
         <div className="mt-6">
           <p className="font-semibold mb-2">Product detail Points</p>
+          {detailPoints.length>0 &&(
+            <ul className="mt-3 space-y-2 mb-3">
+              {detailPoints.map((point,index)=>(
+                  <li key={index} className="flex justify-between items-center bg-white/10 p-2 rounded">
+                    <span className="text-sm">{index+1}. {point}</span>
+                    <button type="button" className="text-xs text-red-400" onClick={()=>handleRemove(index)}>Remove</button>
+                  </li>
+              ))}
+
+            </ul>
+          )}
           <div className="flex gap-2">
             <input 
             type="text" 
@@ -326,17 +337,7 @@ function AddVendorProduct() {
               setPointIndex((prev)=>prev+1)
             }}>Add Point</button>
           </div>
-          {detailPoints.length>0 &&(
-            <ul className="mt-3 space-y-2">
-              {detailPoints.map((point,index)=>(
-                  <li key={index} className="flex justify-between items-center bg-white/10 p-2 rounded">
-                    <span className="text-sm">{index+1}. {point}</span>
-                    <button type="button" className="text-xs text-red-400" onClick={()=>handleRemove(index)}>Remove</button>
-                  </li>
-              ))}
-
-            </ul>
-          )}
+          
         </div>
         <motion.button
         whileHover={{scale:1.02}}

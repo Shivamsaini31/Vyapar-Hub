@@ -1,5 +1,5 @@
 "use client"
-import React,{useEffect} from 'react'
+import {useEffect} from 'react'
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store';
 import axios from 'axios';
@@ -11,8 +11,8 @@ function UseGetAllProducts() {
     const fetchProducts=async()=>{
         try {
             const res=await axios.get("api/vendor/allProducts");
-            // console.log("Vendors:", res.data);
-            if(res?.data)dispatch(setAllProductsData(res.data));
+            console.log("products:", res.data);
+            if(res?.data)dispatch(setAllProductsData(res.data.products));
         } catch (error) {
             console.log(`Error fetching products: ${error}`);
             dispatch(setAllProductsData([]));

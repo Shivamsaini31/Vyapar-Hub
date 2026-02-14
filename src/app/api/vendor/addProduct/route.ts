@@ -37,10 +37,10 @@ export async function POST(req:NextRequest){
         if(isWearable && sizes.length==0){
             return NextResponse.json({message:"sizes are required for wearable products."}, {status:400})
         }
-        const image1=uploadOnCloudinary(img1);
-        const image2=uploadOnCloudinary(img2);
-        const image3=uploadOnCloudinary(img3);
-        const image4=uploadOnCloudinary(img4);
+        const image1=await uploadOnCloudinary(img1);
+        const image2=await uploadOnCloudinary(img2);
+        const image3=await uploadOnCloudinary(img3);
+        const image4=await uploadOnCloudinary(img4);
 
         const product= await Product.create(
             {
@@ -73,11 +73,13 @@ export async function POST(req:NextRequest){
                 $push :{vendorProducts: product._id}
             }, {new:true}
         )
+        console.log(product);
         return NextResponse.json({product},{status:201});
 
 
         
     } catch (error) {
+        console.log(`Error adding product: ${error}`)
         return NextResponse.json({message:`failed to create new product: ${error}`},{status:500})
     }
     
