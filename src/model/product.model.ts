@@ -64,6 +64,10 @@ const productSchema= new mongoose.Schema<IProduct>({
     isStockAvailable:{
         type:Boolean, default:true
     },
+    category:{
+        type: String,
+        required:true
+    },
     vendor:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",

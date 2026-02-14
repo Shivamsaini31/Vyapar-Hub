@@ -1,5 +1,6 @@
 "use client";
-import { IProduct } from "@/model/product.model";
+import UseGetAllProducts from "@/redux/hooks/UseGetAllProductsData";
+import UseGetCurrentUser from "@/redux/hooks/UseGetCurrentUser";
 import { RootState } from "@/redux/store";
 import { motion } from "motion/react";
 import Image from "next/image";
@@ -8,6 +9,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 function Products() {
+  UseGetCurrentUser();
+  UseGetAllProducts();
   const router = useRouter();
   const currUser = useSelector((state: RootState) => state.user.userData);
   const allProductsData = useSelector(
@@ -234,6 +237,7 @@ function Products() {
                     {product.isActive? "Disable" : "Enable"}
                   </motion.button>
                   </div>
+                  
             </div>
           ))
         )}
