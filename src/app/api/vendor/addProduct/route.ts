@@ -61,7 +61,7 @@ export async function POST(req:NextRequest){
                 warranty,
                 payOnDelivery,
                 freeDelivery,
-                detailPoints,
+                detailsPoints: detailPoints,
                 verificationStatus:"pending",
                 isActive:false,
 

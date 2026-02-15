@@ -104,6 +104,7 @@ function Products() {
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
+                        onClick={()=>router.push(`/updateProduct/${product._id}`)}
                         className="px-3 py-1 rounded text-sm bg-purple-600 hover:bg-purple-700"
                       >
                         Edit
@@ -225,6 +226,7 @@ function Products() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
+                  onClick={()=>router.push(`/update-product/${product._id}`)}
                   className="px-3 py-1 rounded text-sm bg-purple-600 hover:bg-purple-700"
                 >
                   Edit

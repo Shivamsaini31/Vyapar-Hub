@@ -7,7 +7,7 @@ function StoreProvider({children}:{children:React.ReactNode}) {
   return (
     
       <Provider store={store}>
-        {children};
+        {children}
         </Provider>
      
     
