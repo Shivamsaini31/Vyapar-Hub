@@ -1,7 +1,8 @@
 "use client"
-import { IProduct } from '@/model/product.model';
+import Product, { IProduct } from '@/model/product.model';
 import UseGetAllProducts from '@/redux/hooks/UseGetAllProductsData';
 import { AppDispatch, RootState } from '@/redux/store'
+import { setAllProductsData } from '@/redux/vendorSlice';
 
 import axios from 'axios';
 import { AnimatePresence , motion} from 'motion/react';
@@ -27,10 +28,45 @@ function ProductApproval() {
     setRejectReason("");
   }
   const handleApproved=async()=>{
-    
+    if(!selectedProduct)return;  
+    setLoading(true);
+    try {
+      const res=await axios.post("/api/admin/update-product-status", {
+        productId: selectedProduct._id,
+        status: "approved"
+      });
+      const updated= allProducts.filter((product)=>product._id !==selectedProduct._id);
+      dispatch(setAllProductsData(updated));
+      setSelectedProduct(null);
+      setLoading(false);
+      alert("Product approved successfully!");
+    } catch (error) {
+      console.log(`Error approving vendor: ${error}`);
+      setLoading(false);
+      alert("Approval failed.")
+    }
   }
   const handleRejected=async()=>{
-    
+    if(!selectedProduct)return;  
+    setLoading(true);
+    try {
+      const res=await axios.post("/api/admin/update-product-status", {
+        productId: selectedProduct._id,
+        status: "rejected",
+        rejectedReason: rejectReason
+      });
+      const updated= allProducts.filter((v)=>v._id !==selectedProduct._id);
+      dispatch(setAllProductsData(updated));
+      setSelectedProduct(null);
+      setLoading(false);
+      setRejectModel(false);
+      alert("Product rejected successfully!");
+    } catch (error) {
+      console.log(`Error rejecting vendor: ${error}`);
+      setLoading(false);
+      setRejectModel(false);
+      alert("Rejection failed.")
+    }
   }
 
   return (
@@ -143,8 +179,19 @@ function ProductApproval() {
               className="bg-gray-900 p-6 rounded-2xl w-full
               max-w-lg border border-white/10">
                 <h3 className="text-xl sm:text-2xl font-bold mb-4">Selected Product Details </h3>
+
+                <Image src={selectedProduct.image1} alt="img"
+                width={50}
+                height={40}
+                className="rounded mb-4"/>
                 <div className="space-y-2 text-sm">
-                  
+                  <p><b>Title: </b>{selectedProduct.title}</p>
+                  <p><b>price: </b>{selectedProduct.price}</p>
+                  <p><b>Category: </b>{selectedProduct.category}</p>
+                  <p><b>Description: </b>{selectedProduct.description}</p>
+                  <p><b>Status: </b>
+                  <span className="text-yellow-400">Pending</span></p>
+
                  
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3 mt-6">

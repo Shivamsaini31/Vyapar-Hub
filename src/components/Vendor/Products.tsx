@@ -77,8 +77,15 @@ function Products() {
                   <td className="p-4">₹ {product?.price || "-"}</td>
                   <td className="p-4">
                     <span
-                      className="px-3 py-1 rounded-full text-xs
-                  bg-yellow-500/30 text-yellow-300"
+                      className={`px-3 py-1 rounded-full text-xs
+                   
+                   ${
+                     product.verificationStatus === "pending"
+                       ? "bg-yellow-500/30 text-yellow-300"
+                       : product.verificationStatus === "approved"
+                         ? "bg-green-500/30 text-green-300"
+                         : "bg-red-500/30 text-red-300"
+                   }`}
                     >
                       {product?.verificationStatus?.toUpperCase()}
                     </span>
@@ -92,44 +99,45 @@ function Products() {
                       {product?.isActive ? "active" : "InActive"}
                     </span>
                   </td>
-                  <td className="p-4 text-center flex flex-col space-y-1">
-                  <motion.button 
-                  whileHover={{scale:1.02}}
-                  whileTap={{scale:0.98}}
-                  className="px-3 py-1 rounded text-sm bg-purple-600 hover:bg-purple-700">
-                    Edit
-                  </motion.button>
-                  <motion.button 
-                  whileHover={{scale:1.02}}
-                  whileTap={{scale:0.98}}
-                  disabled={product.verificationStatus !=="approved"}
-                  className={`px-3 py-1 rounded text-sm
-                  ${product.verificationStatus==="approved"
-                    ? "bg-green-600 hover:bg-green-700"
-                    : "bg-gray-600 cursor-not-allowed"
+                  <td className="p-4 text-center">
+                    <div className="flex space-x-2 justify-center items-center">
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="px-3 py-1 rounded text-sm bg-purple-600 hover:bg-purple-700"
+                      >
+                        Edit
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        disabled={product.verificationStatus !== "approved"}
+                        className={`px-3 py-1 rounded text-sm
+                  ${
+                    product.verificationStatus === "approved"
+                      ? "bg-green-600 hover:bg-green-700"
+                      : "bg-gray-600 cursor-not-allowed"
+                  }`}
+                      >
+                        {product.isActive ? "Disable" : "Enable"}
+                      </motion.button>
+                    </div>
 
-                  }`}>
-                    {product.isActive? "Disable" : "Enable"}
-                  </motion.button>
-
-                  {
-                    product.verificationStatus==="rejected"
-                    && (
-                      <div className="mt-2 bg-red-500/10 border border-red-500/30
-                      text-red-300 text-xs p-2 rounded">
+                    {product.verificationStatus === "rejected" && (
+                      <div
+                        className="mt-2 bg-red-500/10 border border-red-500/30
+                      text-red-300 text-xs p-2 rounded"
+                      >
                         <p>
-                        <b>Rejected:</b>
-                        {product.rejectedReason || "No reason provided!"}
+                          <b>Rejected:</b>{" "}
+                          {product.rejectedReason || "No reason provided!"}
                         </p>
-                        <p  className="mt-1 text-yellow-300">
-                          After edit, the product will be resent for re-verification.
-
+                        <p className="mt-1 text-yellow-300">
+                          After edit, the product will be resent for
+                          re-verification.
                         </p>
-
-                         
                       </div>
-                    )
-                  }
+                    )}
                   </td>
                 </tr>
               ))
@@ -199,45 +207,42 @@ function Products() {
                   </span>
                 </p>
               </div>
-              {
-                    product.verificationStatus==="rejected"
-                    && (
-                      <div className="mt-2 bg-red-500/10 border border-red-500/30
-                      text-red-300 text-xs p-2 rounded">
-                        <p>
-                        <b>Rejected:</b>
-                        {product.rejectedReason || "No reason provided!"}
-                        </p>
-                        <p  className="mt-1 text-yellow-300">
-                          After edit, the product will be resent for re-verification.
-
-                        </p>
-
-                         
-                      </div>
-                    )
-                  }
-                  <div className="flex gap-3  mt-4">
-                    <motion.button 
-                  whileHover={{scale:1.02}}
-                  whileTap={{scale:0.98}}
-                  className="px-3 py-1 rounded text-sm bg-purple-600 hover:bg-purple-700">
-                    Edit
-                  </motion.button>
-                  <motion.button 
-                  whileHover={{scale:1.02}}
-                  whileTap={{scale:0.98}}
-                  disabled={product.verificationStatus !=="approved"}
+              {product.verificationStatus === "rejected" && (
+                <div
+                  className="mt-2 bg-red-500/10 border border-red-500/30
+                      text-red-300 text-xs p-2 rounded"
+                >
+                  <p>
+                    <b>Rejected:</b>{" "}
+                    {product.rejectedReason || "No reason provided!"}
+                  </p>
+                  <p className="mt-1 text-yellow-300">
+                    After edit, the product will be resent for re-verification.
+                  </p>
+                </div>
+              )}
+              <div className="flex gap-3  mt-4">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="px-3 py-1 rounded text-sm bg-purple-600 hover:bg-purple-700"
+                >
+                  Edit
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  disabled={product.verificationStatus !== "approved"}
                   className={`px-3 py-1 rounded text-sm
-                  ${product.verificationStatus==="approved"
-                    ? "bg-green-600 hover:bg-green-700"
-                    : "bg-gray-600 cursor-not-allowed"
-
-                  }`}>
-                    {product.isActive? "Disable" : "Enable"}
-                  </motion.button>
-                  </div>
-                  
+                  ${
+                    product.verificationStatus === "approved"
+                      ? "bg-green-600 hover:bg-green-700"
+                      : "bg-gray-600 cursor-not-allowed"
+                  }`}
+                >
+                  {product.isActive ? "Disable" : "Enable"}
+                </motion.button>
+              </div>
             </div>
           ))
         )}

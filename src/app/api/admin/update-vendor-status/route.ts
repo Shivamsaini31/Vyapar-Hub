@@ -18,6 +18,7 @@ export async function POST(req:NextRequest){
         const vendor=await User.findById(vendorId);
         if(status==="approved"){
             vendor.verificationStatus="approved";
+            vendor.isApproved=true;
             vendor.approvedAt=new Date();
             vendor.rejectedReason="";
             await vendor.save();
