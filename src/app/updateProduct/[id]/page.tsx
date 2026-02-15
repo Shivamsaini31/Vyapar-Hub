@@ -95,12 +95,12 @@ function UpdateProduct() {
     formData.append("warranty",warranty);
     formData.append("payOnDelivery",String(payOnDelivery));
     detailPoints.forEach((point)=>formData.append("detailPoints",point));
-    if(image1 && image2 && image3 && image4){
-      formData.append("image1",image1);
-      formData.append("image2",image2);
-      formData.append("image3",image3);
-      formData.append("image4",image4);
-    }
+    
+    if(image1) formData.append("image1",image1);
+    if(image2) formData.append("image2",image2);
+    if(image3) formData.append("image3",image3);
+    if(image4) formData.append("image4",image4);
+    
 
     try {
       const result=await axios.post(`/api/vendor/update-product`,formData);

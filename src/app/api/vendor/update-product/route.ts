@@ -30,15 +30,15 @@ export async function POST(req: NextRequest) {
     const category = formData.get("category") as string;
     const isWearable = formData.get("isWearable") === "true";
     const sizes = formData.getAll("sizes") as string[];
-    const replacementDays = Number(formData.get("replacementDays") || 0);
+    const replacementDays = (formData.get("replacementDays") || "0");
     const freeDelivery = formData.get("freeDelivery") === "true";
     const warranty = (formData.get("warranty") as string) || "No warranty";
     const payOnDelivery = formData.get("payOnDelivery") === "true";
     const detailPoints = formData.getAll("detailPoints");
-    const img1 = formData.get("image1") as Blob;
-    const img2 = formData.get("image2") as Blob;
-    const img3 = formData.get("image3") as Blob;
-    const img4 = formData.get("image4") as Blob;
+    const img1 = formData.get("image1") as Blob|null;
+    const img2 = formData.get("image2") as Blob|null;
+    const img3 = formData.get("image3") as Blob|null;
+    const img4 = formData.get("image4") as Blob|null;
 
     if (
       !title ||
@@ -58,10 +58,12 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
     }
-    const image1 = await uploadOnCloudinary(img1);
-    const image2 = await uploadOnCloudinary(img2);
-    const image3 = await uploadOnCloudinary(img3);
-    const image4 = await uploadOnCloudinary(img4);
+    let image1=product?.image1, image2=product?.image2, image3=product?.image3, image4=product?.image4;
+
+    if(img1)image1 = await uploadOnCloudinary(img1);
+    if(img2)image2 = await uploadOnCloudinary(img2);
+    if(img3)image3 = await uploadOnCloudinary(img3);
+    if(img4)image4 = await uploadOnCloudinary(img4);
 
     const UpdatedProduct = await Product.findByIdAndUpdate(
       productId ,

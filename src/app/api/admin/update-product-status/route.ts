@@ -34,6 +34,7 @@ export async function POST(req:NextRequest){
 
 
     } catch (error) {
+        console.log(`Error in updating product status: ${error}`)
         return NextResponse.json({message:`Error updating product status ${error}`}, {status:500});
     }
 }

@@ -110,7 +110,7 @@ const productSchema= new mongoose.Schema<IProduct>({
     },
     replacementDays:{
         type:String,
-        default:0,
+        default:"0",
     },
     freeDelivery:{
         type:Boolean,
