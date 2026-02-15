@@ -1,18 +1,21 @@
 "use client";
 import UseGetAllProducts from "@/redux/hooks/UseGetAllProductsData";
 import UseGetCurrentUser from "@/redux/hooks/UseGetCurrentUser";
-import { RootState } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
+import { setAllProductsData } from "@/redux/vendorSlice";
+import axios from "axios";
 import { motion } from "motion/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function Products() {
   UseGetCurrentUser();
   UseGetAllProducts();
   const router = useRouter();
   const currUser = useSelector((state: RootState) => state.user.userData);
+  const dispatch = useDispatch<AppDispatch>();
   const allProductsData = useSelector(
     (state: RootState) => state.vendors.allProductsData,
   );
@@ -23,6 +26,22 @@ function Products() {
             p.vendor === currUser?._id || p.vendor?._id === currUser?._id,
         )
       : [];
+
+  const toggleIsActive = async (productId: string, currIsActive: boolean) => {
+    try {
+      const res = await axios.post("/api/vendor/isActiveProduct", {
+        productId,
+        isActive: !currIsActive,
+      });
+      const updatedProducts = allProductsData.map((p) =>
+        String(p?._id) === productId ? res.data : p,
+      );
+      dispatch(setAllProductsData(updatedProducts));
+      
+    } catch (error) {
+      console.log(`Error updating isActive status of product: ${error}`)
+    }
+  };
   return (
     <div className="w-full p-4 sm:p-8 text-white">
       {/* header */}
@@ -92,11 +111,11 @@ function Products() {
                   </td>
                   <td className="p-4">
                     <span
-                      className={`text-sm ${
+                      className={`text-sm font-semibold ${
                         product?.isActive ? "text-green-400" : "text-red-400"
                       }`}
                     >
-                      {product?.isActive ? "active" : "InActive"}
+                      {product?.isActive ? "Active" : "InActive"}
                     </span>
                   </td>
                   <td className="p-4 text-center">
@@ -104,12 +123,20 @@ function Products() {
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        onClick={()=>router.push(`/updateProduct/${product._id}`)}
+                        onClick={() =>
+                          router.push(`/updateProduct/${product._id}`)
+                        }
                         className="px-3 py-1 rounded text-sm bg-purple-600 hover:bg-purple-700"
                       >
                         Edit
                       </motion.button>
                       <motion.button
+                        onClick={() =>
+                          toggleIsActive(
+                            String(product?._id),
+                            Boolean(product.isActive),
+                          )
+                        }
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         disabled={product.verificationStatus !== "approved"}
@@ -226,7 +253,7 @@ function Products() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={()=>router.push(`/update-product/${product._id}`)}
+                  onClick={() => router.push(`/update-product/${product._id}`)}
                   className="px-3 py-1 rounded text-sm bg-purple-600 hover:bg-purple-700"
                 >
                   Edit
@@ -235,6 +262,12 @@ function Products() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   disabled={product.verificationStatus !== "approved"}
+                  onClick={() =>
+                    toggleIsActive(
+                      String(product?._id),
+                      Boolean(product.isActive),
+                    )
+                  }
                   className={`px-3 py-1 rounded text-sm
                   ${
                     product.verificationStatus === "approved"
