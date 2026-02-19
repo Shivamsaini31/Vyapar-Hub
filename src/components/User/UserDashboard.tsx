@@ -2,6 +2,7 @@
 import React from 'react'
 import Slider from './Slider'
 import CategorySlider from './CategorySlider'
+import ProductCardPage from './ProductCardPage'
 
 function UserDashboard() {
   return (
@@ -9,6 +10,7 @@ function UserDashboard() {
      font-sans flex-col">
       <Slider/>
       <CategorySlider/>
+      <ProductCardPage/>
     </div>
   )
 }
