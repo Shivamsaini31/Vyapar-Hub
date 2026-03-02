@@ -10,8 +10,8 @@ function UseGetAllProducts() {
   useEffect(()=>{
     const fetchProducts=async()=>{
         try {
-            const res=await axios.get("api/vendor/allProducts");
-            console.log("products:", res.data);
+            const res=await axios.get("/api/vendor/allProducts");
+            // console.log("products:", res.data);
             if(res?.data)dispatch(setAllProductsData(res.data.products));
         } catch (error) {
             console.log(`Error fetching products: ${error}`);

@@ -2,6 +2,7 @@
 import { IProduct } from "@/model/product.model";
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import {
   FaChevronLeft,
@@ -24,8 +25,10 @@ function ProductCard({ product }: { product: IProduct }) {
   const previous = () => {
     setCurr((prev) => (prev - 1 + images.length) % images.length);
   };
+  const router=useRouter();
   return (
     <motion.div
+    onClick={()=>router.push(`/viewProduct/${product?._id}`)}
       initial={{ opacity: 0, y: 60 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 70, damping: 18 }}

@@ -10,7 +10,7 @@ function UseGetAllVendors() {
   useEffect(()=>{
     const fetchVendors=async()=>{
         try {
-            const res=await axios.get("api/vendor/getAllVendors");
+            const res=await axios.get("/api/vendor/getAllVendors");
             // console.log("Vendors:", res.data);
             if(res?.data)dispatch(setAllVendorsData(res.data.vendors));
         } catch (error) {
