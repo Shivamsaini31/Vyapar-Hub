@@ -8,6 +8,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import {FaStar, FaRegStar} from "react-icons/fa";
 import {motion } from "motion/react";
+import ProductCard from "@/components/ProductCard";
 
 function ViewProduct() {
   const params = useParams();
@@ -23,6 +24,8 @@ function ViewProduct() {
     product?.image4,
   ].filter((img): img is string=>Boolean(img));
   const [activeImage, setActiveImage] = useState(0);
+
+  const relatedProducts= allProductsData.filter((p:IProduct)=>p.category===product?.category && String(p._id)!==productId);
 
   useEffect(()=>{
     if(!images.length) return;
@@ -140,6 +143,17 @@ function ViewProduct() {
               </div>)}
 
         </div>}
+
+        {Array.isArray(relatedProducts) && relatedProducts.length > 0 &&(
+          <div className="mt-12">
+            <h3 className="text-2xl font-bold mb-5 text-white">Related Products</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
+            {relatedProducts.slice(0,8).map((p:IProduct)=>(
+              <ProductCard key={p?._id?.toString()} product={p} />
+            ))}
+            </div>
+            </div>
+          )}
       </div>
     </div>
   );
