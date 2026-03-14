@@ -6,7 +6,9 @@ import { NextResponse } from "next/server";
 export async function GET(){
     try {
         await connectDB();
-        const products= await Product.find().populate("vendor","name email shopName").sort({createdAt:-1});
+        const products= await Product.find().populate("vendor","name email shopName").populate({
+            path:"reviews.user", select: "name email image"
+        }).sort({createdAt:-1});
         // console.log(products);
         return NextResponse.json({products}, {status:200});
     } catch (error) {

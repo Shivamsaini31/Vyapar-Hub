@@ -9,6 +9,7 @@ import {
   FaChevronRight,
   FaStar,
   FaShoppingCart,
+  FaRegStar,
 } from "react-icons/fa";
 
 function ProductCard({ product }: { product: IProduct }) {
@@ -26,6 +27,13 @@ function ProductCard({ product }: { product: IProduct }) {
     setCurr((prev) => (prev - 1 + images.length) % images.length);
   };
   const router=useRouter();
+
+    const totalReviews=product?.reviews?.length ?? 0;
+  const avgRating=product && totalReviews > 0?(
+    product.reviews!.reduce((sum:number, r:{rating:number})=>sum+r.rating,0)/totalReviews
+  ).toFixed(1): 0;
+
+
   return (
     <motion.div
     onClick={()=>router.push(`/viewProduct/${product?._id}`)}
@@ -84,10 +92,13 @@ function ProductCard({ product }: { product: IProduct }) {
         <p className="text-lg font-bold text-greeen-600">₹ {product.price}</p>
         <div className="flex items-center gap-1 text-yellow-500 text-sm">
             {[1,2,3,4,5].map((i)=>(
-                <FaStar key={i}/>
+              Math.round(Number(avgRating))>=i?
+              <FaStar key={i}/>
+              : <FaRegStar key={i}/>
+              
             ))}
             <span className="text-gray-500 text-xs mt-1">
-                5 (120)
+                {avgRating} ({totalReviews})
 
             </span>
         </div>

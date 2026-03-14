@@ -6,9 +6,11 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { FaStar, FaRegStar } from "react-icons/fa";
+import { FaStar, FaRegStar, FaUserCircle } from "react-icons/fa";
 import { motion } from "motion/react";
 import ProductCard from "@/components/ProductCard";
+import axios from "axios";
+import { ClipLoader } from "react-spinners";
 
 function ViewProduct() {
   const params = useParams();
@@ -20,9 +22,16 @@ function ViewProduct() {
   const [reviewComment, setReviewComment] = useState("");
   const [reviewImage, setReviewImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const product: IProduct | undefined = allProductsData.find(
     (p: IProduct) => String(p._id) === productId,
   );
+
+  const totalReviews=product?.reviews?.length ?? 0;
+  const avgRating=product && totalReviews > 0?(
+    product.reviews!.reduce((sum:number, r:{rating:number})=>sum+r.rating,0)/totalReviews
+  ).toFixed(1): 0;
+
   UseGetAllProducts();
   console.log(product);
   const images: string[] = [
@@ -37,7 +46,30 @@ function ViewProduct() {
     (p: IProduct) =>
       p.category === product?.category && String(p._id) !== productId,
   );
-
+  const handleSubmitReview = async () => {
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("productId", String(productId));
+      formData.append("rating", String(reviewRating));
+      formData.append("comment", reviewComment);
+      if (reviewImage) {
+        formData.append("image", reviewImage);
+      }
+      const productReview = await axios.post("/api/user/addReview", formData);
+      console.log(productReview.data);
+      setLoading(false);
+      setReviewImage(null);
+      setReviewComment("");
+      setReviewRating(0);
+      setPreview(null);
+      alert("Review submitted successfully!");
+    } catch (error) {
+      console.log(`Error in submitting review:${error}`);
+      setLoading(false);
+      alert("Failed to submit review. Please try again.");
+    }
+  };
   useEffect(() => {
     if (!images.length) return;
     const interval = setInterval(() => {
@@ -99,10 +131,12 @@ function ViewProduct() {
               <div className="flex items-center gap-2 mt-1 mb-4">
                 <div className="flex text-yellow-400">
                   {[1, 2, 3, 4, 5].map((i) => (
+                    Math.round(Number(avgRating))>=i?
                     <FaStar key={i} />
+                    : <FaRegStar key={i}/>
                   ))}
                 </div>
-                <span className="text-gray-400 text-sm">(4 / 120) reviews</span>
+                <span className="text-gray-400 text-sm">({avgRating} / {totalReviews}) reviews</span>
               </div>
               <p className="text-gray-300 mb-4">{product?.description}</p>
               <p className="text-gray-50 mb-3">
@@ -193,52 +227,118 @@ function ViewProduct() {
           <div className="mb-8">
             <p className="text-white font-semibold mb-2">Add your review</p>
             <div className="flex gap-2 mb-3 text-yellow-400">
-              {
-                [1,2,3,4,5].map((i)=>(
-                  <span key={i} onClick={()=>setReviewRating(i)} className="cursor-pointer">{i<=reviewRating? 
-                  <FaStar/>
-                  :<FaRegStar/>
-                  }</span>
-                ))
-              }
+              {[1, 2, 3, 4, 5].map((i) => (
+                <span
+                  key={i}
+                  onClick={() => setReviewRating(i)}
+                  className="cursor-pointer"
+                >
+                  {i <= reviewRating ? <FaStar /> : <FaRegStar />}
+                </span>
+              ))}
             </div>
             <textarea
-            placeholder="Write a Review..."
-            onChange={(e)=>setReviewComment(e.target.value)}
-            value={reviewComment} 
-            className="w-full p-3 rounded bg-black text-white border border-white/20 mb-3
-            focus:outline-none focus:ring focus:ring-blue-500" rows={3}/>
+              placeholder="Write a Review..."
+              onChange={(e) => setReviewComment(e.target.value)}
+              value={reviewComment}
+              className="w-full p-3 rounded bg-black text-white border border-white/20 mb-3
+            focus:outline-none focus:ring focus:ring-blue-500"
+              rows={3}
+            />
             <div className="flex flex-col">
-            <label htmlFor="img" className="text-white font-semibold mb-2">Select Image for review</label>
-            <input type="file" id="img" accept="image/*"
-            className="mb-3 text-black bg-white w-[200px] rounded-lg p-2 cursor-pointer"
-
-            onChange={(e)=>{
-              const file=e.target.files?.[0];
-              if(file){
-                setReviewImage(file);
-                setPreview(URL.createObjectURL(file));
-              } else {
-                setReviewImage(null);
-                setPreview("");
-              }
-            }}/>
-
-            {preview && (
-              <Image src={preview}
-              alt="preview"
-              height={100}
-              width={100}
-              className="rounded mb-3"
+              <label htmlFor="img" className="text-white font-semibold mb-2">
+                Select Image for review
+              </label>
+              <input
+                type="file"
+                id="img"
+                accept="image/*"
+                className="mb-3 text-black bg-white w-[200px] rounded-lg p-2 cursor-pointer"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setReviewImage(file);
+                    setPreview(URL.createObjectURL(file));
+                  } else {
+                    setReviewImage(null);
+                    setPreview("");
+                  }
+                }}
               />
-            )}
+
+              {preview && (
+                <Image
+                  src={preview}
+                  alt="preview"
+                  height={100}
+                  width={100}
+                  className="rounded mb-3"
+                />
+              )}
+
+              
             </div>
 
             <motion.button
-            whileHover={{scale:1.03}}
-            whileTap={{scale:0.97}} 
-            className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded 
-            text-white font-semibold mt-4">Submit Review</motion.button>
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              type="submit"
+              disabled={loading}
+              onClick={handleSubmitReview}
+              className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded 
+            text-white font-semibold mt-4"
+            >
+              {loading ? <ClipLoader size={22} /> : "Submit Review"}
+            </motion.button>
+
+            
+            {product?.reviews && product?.reviews?.length>0 ? (
+                  <h2 className="text-white font-semibold  text-2xl mt-5">Reviews</h2>
+                ) : 
+                <h2 className="text-white font-semibold text-2xl mt-5">No Reviews found.</h2>
+                }
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-10">
+                
+                
+                {product?.reviews && product?.reviews?.length>0 &&  product?.reviews?.map((review,index)=>(
+                  <div key={index}
+                  className="bg-white border border-black/10 rounded-xl p-5 w-[250px]">
+                    <div className="flex items-center mb-2 gap-3">
+                      <div className="w-10 h-10 rounded-full border border-white/20 flex items-center 
+                      justify-center bg-black">
+                        {review?.user?.image
+                        ? <Image src={review.user.image} alt="user" width={40} height={40} 
+                        className="rounded-full object-cover w-9 h-9"/>
+                        : <FaUserCircle size={20} className="w-9 h-9"/>}
+                      </div> 
+                      <div className="">
+                        <p className="text-black font-semibold text-sm">{review?.user?.name}</p>
+                        <div className="flex text-yellow-400">
+                          {[1,2,3,4,5,].map((i)=>(
+                            i<=review?.rating?<FaStar key={i}/> : <FaRegStar key={i}/>
+                          ))}
+                        </div>
+
+                      </div>
+                    </div>
+                    <p className="text-gray-900 text-sm mt-2">{review?.comment}</p>
+
+                    {review?.image ?
+                    <div className="w-[180px] h-[180px] border border-white/10 rounded-lg overflow-hidden bg-black">
+                      <Image src={review.image} alt="review" width={180}
+                      height={180} className="object-contain"/>
+                    </div>
+                    : <div className="w-[180px] h-[180px] border border-white/10 rounded-lg overflow-hidden bg-gray-400 flex
+                    items-center justify-center text-white text-md">
+                      
+                      No image found
+                      
+                      </div>
+                    }
+                  </div>
+                ))}
+              </div>
           </div>
         </div>
       </div>

@@ -27,9 +27,9 @@ export async function POST(req:NextRequest){
             return NextResponse.json({message:"Rating must be between 1 and 5"}, {status:400});
         }
 
-        if(!comment || comment.trim().length===0){
-            return NextResponse.json({message:"Comment is required"}, {status:400});
-        }
+        // if(!comment || comment.trim().length===0){
+        //     return NextResponse.json({message:"Comment is required"}, {status:400});
+        // }
 
         let imageUrl;
         if(imageFile){
@@ -42,13 +42,13 @@ export async function POST(req:NextRequest){
                 reviews:{
                     user:userId,
                     rating,
-                    comment,
-                    image:imageFile ? URL.createObjectURL(imageFile) : undefined,
+                    comment:comment.trim() || "",
+                    image:imageFile ? imageUrl : undefined,
                     createdAt:new Date(),
                 }
             }
         },{new:true});
-        await product?.save();
+        // await product?.save();
         return NextResponse.json({message:"Review added successfully", product});
     } catch (error) {
         console.log(`Error in adding reviews: ${error}`);
