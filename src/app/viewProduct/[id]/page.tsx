@@ -11,6 +11,7 @@ import { motion } from "motion/react";
 import ProductCard from "@/components/ProductCard";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
+import { useRouter } from "next/navigation";
 
 function ViewProduct() {
   const params = useParams();
@@ -26,11 +27,27 @@ function ViewProduct() {
   const product: IProduct | undefined = allProductsData.find(
     (p: IProduct) => String(p._id) === productId,
   );
-
+  const router=useRouter();
   const totalReviews=product?.reviews?.length ?? 0;
   const avgRating=product && totalReviews > 0?(
     product.reviews!.reduce((sum:number, r:{rating:number})=>sum+r.rating,0)/totalReviews
   ).toFixed(1): 0;
+   const handleAddToCart=async(e: React.MouseEvent)=>{
+    e.stopPropagation();
+    try {
+      const result= await axios.post("/api/user/cart/add",{
+        product:productId,
+        quantity:1
+      });
+      console.log(result.data);
+      alert("Product added to cart!✅");
+      router.push("/cart");
+      
+    } catch (error) {
+      console.log(error);
+      alert("Error adding product to the cart!");
+    }
+  }
 
   UseGetAllProducts();
   console.log(product);
@@ -153,6 +170,7 @@ function ViewProduct() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={handleAddToCart}
                 className="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded
             font-semibold transition text-white"
               >

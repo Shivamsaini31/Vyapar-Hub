@@ -94,7 +94,7 @@ function Navbar({ user }: { user: IUser }) {
               )}
             </AnimatePresence>
           </div>
-          {user.role=="user" && <CartButton router={router} count={5}/>}
+          {user.role=="user" && <CartButton router={router} count={user.cart?.length}/>}
         </div>
 
         {/* Mobile Navbar */}

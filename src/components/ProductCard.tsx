@@ -1,5 +1,6 @@
 "use client";
 import { IProduct } from "@/model/product.model";
+import axios from "axios";
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -32,6 +33,23 @@ function ProductCard({ product }: { product: IProduct }) {
   const avgRating=product && totalReviews > 0?(
     product.reviews!.reduce((sum:number, r:{rating:number})=>sum+r.rating,0)/totalReviews
   ).toFixed(1): 0;
+
+  const handleAddToCart=async(e: React.MouseEvent)=>{
+    e.stopPropagation();
+    try {
+      const result= await axios.post("/api/user/cart/add",{
+        product:product._id,
+        quantity:1
+      });
+      console.log(result.data);
+      alert("Product added to cart!✅");
+      router.push("/cart");
+      
+    } catch (error) {
+      console.log(error);
+      alert("Error adding product to the cart!");
+    }
+  }
 
 
   return (
@@ -106,6 +124,8 @@ function ProductCard({ product }: { product: IProduct }) {
 
         <motion.button
         whileHover={{scale:1.03}}
+        whileTap={{scale:0.97}}
+        onClick={handleAddToCart}
         className="w-full mt-3 bg-black text-white py-2 rounded-lg flex items-center 
         justify-center gap-2 hover:bg-gray-900 transition">
             <FaShoppingCart size={14}/>Add to Cart
