@@ -38,7 +38,7 @@ function ProductCard({ product }: { product: IProduct }) {
     e.stopPropagation();
     try {
       const result= await axios.post("/api/user/cart/add",{
-        product:product._id,
+        productId:product._id,
         quantity:1
       });
       console.log(result.data);

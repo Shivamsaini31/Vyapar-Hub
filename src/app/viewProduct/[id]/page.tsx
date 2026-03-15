@@ -32,11 +32,12 @@ function ViewProduct() {
   const avgRating=product && totalReviews > 0?(
     product.reviews!.reduce((sum:number, r:{rating:number})=>sum+r.rating,0)/totalReviews
   ).toFixed(1): 0;
+
    const handleAddToCart=async(e: React.MouseEvent)=>{
     e.stopPropagation();
     try {
       const result= await axios.post("/api/user/cart/add",{
-        product:productId,
+        productId:productId,
         quantity:1
       });
       console.log(result.data);
