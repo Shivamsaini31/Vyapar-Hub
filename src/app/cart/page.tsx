@@ -20,10 +20,25 @@ function Cart() {
         
         getCart();
     },[]);
+    const handleRemove=async(productId:string)=>{           
+        try {
+            const result=confirm("Do you really want to remove this product from the cart?");
+            if(result){
+            await axios.post("api/user/cart/remove",{productId});
+            getCart();
+            alert("Product removed from the cart");
+            }
+            
+        } catch (error) {
+            console.log(`Error Removing product ${error}`);
+            alert("Error removing product from the cart");
+        }
+
+    }
     const handleCartUpdate=async(productId:string, quantity:number)=>{
         try{
             if(quantity<=0){
-                alert("Quantity must be at least 1. To remove the product, please use the remove button.");
+                handleRemove(productId);
                 return;
             }
         const result=await axios.post("/api/user/cart/update",{
@@ -61,7 +76,7 @@ function Cart() {
                         </div>
                         <div className="w-full flex justify-start gap-4 align-center">
                         <button className="mt-3 bg-blue-600 px-4 py-2 rounded"> Checkout this product</button>
-                        <button className="block mt-2 text-red-400">Remove</button>
+                        <button onClick={()=>handleRemove(item.product._id)} className="block mt-2 text-red-400 cursor-pointer">Remove</button>
                         </div>
                         
                         
