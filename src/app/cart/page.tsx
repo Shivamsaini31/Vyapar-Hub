@@ -5,9 +5,7 @@ import React, { useEffect, useState } from 'react'
 
 function Cart() {
     const [cart, setCart]=useState<any[]>([]);
-
-    useEffect(()=>{
-        const getCart=async()=>{
+    const getCart=async()=>{
             try {
                 const result=await axios.get("/api/user/cart/get");
                 setCart(result.data.cart|| []);
@@ -17,8 +15,29 @@ function Cart() {
                 alert("Failed to fetch cart!");
             }
         }
+
+    useEffect(()=>{
+        
         getCart();
     },[]);
+    const handleCartUpdate=async(productId:string, quantity:number)=>{
+        try{
+            if(quantity<=0){
+                alert("Quantity must be at least 1. To remove the product, please use the remove button.");
+                return;
+            }
+        const result=await axios.post("/api/user/cart/update",{
+            productId,
+            quantity
+        });
+        getCart();
+    }
+    catch(error){
+        console.error("Error updating cart:", error);
+        alert("Failed to update cart!");
+    }
+
+    }
     if(cart===null){
         return <div className="min-h-screen flex items-center justify-center bg-linear-to-br
     from-gray-900 via-black to-gray-900 p-6 text-white text-4xl">Cart Empty</div>
@@ -36,9 +55,9 @@ function Cart() {
                         <p className="text-green-500">₹ {item.product.price}</p>
 
                         <div className="flex gap-2 mt-2">
-                            <button className="border border-gray-600 px-2 rounded">-</button>
+                            <button onClick={()=>{handleCartUpdate(item.product._id, item.quantity-1)}} className="border border-gray-600 px-2 rounded">-</button>
                             <span>{item.quantity}</span>
-                            <button className="border border-gray-600 px-2 rounded">+</button>
+                            <button onClick={()=>{handleCartUpdate(item.product._id, item.quantity+1)}} className="border border-gray-600 px-2 rounded">+</button>
                         </div>
                         <div className="w-full flex justify-start gap-4 align-center">
                         <button className="mt-3 bg-blue-600 px-4 py-2 rounded"> Checkout this product</button>
