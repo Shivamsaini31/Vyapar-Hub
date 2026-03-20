@@ -1,10 +1,12 @@
 "use client"
 import axios from 'axios';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
 function Cart() {
     const [cart, setCart]=useState<any[]>([]);
+    const router=useRouter();
     const getCart=async()=>{
             try {
                 const result=await axios.get("/api/user/cart/get");
@@ -53,7 +55,7 @@ function Cart() {
     }
 
     }
-    if(cart===null){
+    if(cart.length===0){
         return <div className="min-h-screen flex items-center justify-center bg-linear-to-br
     from-gray-900 via-black to-gray-900 p-6 text-white text-4xl">Cart Empty</div>
     }
@@ -62,7 +64,8 @@ function Cart() {
     from-gray-900 via-black to-gray-900 p-6 text-white ">
         <div className="max-w-5xl mx-auto space-y-4">
             {cart.map((item,index)=>(
-                <div key={index} className="bg-white/10 p-4 rounded-lg flex gap-4">
+                <div key={index} className="bg-white/10 p-4 rounded-lg flex
+                flex-col md:flex-row gap-4">
                     <Image src={item.product.image1} alt={item.product.title}
                     width={100} height={100}/>
                     <div className="flex-1">
@@ -74,8 +77,9 @@ function Cart() {
                             <span>{item.quantity}</span>
                             <button onClick={()=>{handleCartUpdate(item.product._id, item.quantity+1)}} className="border border-gray-600 px-2 rounded">+</button>
                         </div>
-                        <div className="w-full flex justify-start gap-4 align-center">
-                        <button className="mt-3 bg-blue-600 px-4 py-2 rounded"> Checkout this product</button>
+                        <div className="w-full flex flex-col md:flex-row md:items-center items-start justify-start gap-2 md:gap-4 align-center">
+                        <button className="mt-3 bg-blue-600 px-4 py-2 rounded text-nowrap"
+                        onClick={()=>router.push(`/checkout/${item.product._id}`)}> Checkout this product</button>
                         <button onClick={()=>handleRemove(item.product._id)} className="block mt-2 text-red-400 cursor-pointer">Remove</button>
                         </div>
                         
