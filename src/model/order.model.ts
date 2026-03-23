@@ -116,7 +116,7 @@ const orderSchema= new mongoose.Schema<IOrder>({
     },
     cancelledAt:{
         type:Date,
-    }
+    },
     returnedAmount:{
         type:Number,
         default:0
@@ -133,11 +133,11 @@ const orderSchema= new mongoose.Schema<IOrder>({
         address:{
             type:String,
             required:true,
-        }
+        },
         city:{
             type:String,
             required:true,
-        }
+        },
         pinCode:{
             type:String,
             required:true,
