@@ -34,11 +34,11 @@ export interface IProduct{
     detailsPoints?: string[];
 
     reviews?:{
-        user:IUser,
-        rating:number,
-        comment?:string,
-        image?:string,
-        createdAt:Date,
+        user:IUser;
+        rating:number;
+        comment?:string;
+        image?:string;
+        createdAt:Date;
     }[];
 
     vendor: IUser;
