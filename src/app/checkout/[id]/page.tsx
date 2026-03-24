@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import {FaStripe} from "react-icons/fa"
+import { ClipLoader } from "react-spinners";
 
 function Checkout() {
   const params = useParams();
@@ -23,7 +24,34 @@ function Checkout() {
   const deliveryCharge= item?.product.freeDelivery? 0 : 50;
   const serviceCharge=30;
   const finalTotal= deliveryCharge+productTotal+ serviceCharge;
+  const [loading,setLoading]=useState(false);
 
+  const handlePlaceOrder= async()=>{
+    if(!name || !phone || !address || !city || !pinCode){
+        alert("Please fill in all address details");
+        return;
+    } 
+    const payload={
+      productId,
+      address:{name,phone, address, city, pinCode},
+      quantity:item.quantity,
+      amount:finalTotal,
+      deliveryCharge,
+      serviceCharge
+    }
+    setLoading(true);
+    try {
+      if(paymentMethod==="cod"){
+        const result=await axios.post("/api/order/cod", payload);
+        router.push("/orders");
+      }
+    } catch (error) {
+      alert("Checkout failed!");
+      console.log(`Error checking out: ${error}`);
+    } finally {
+      setLoading(false);
+    }
+  }
   useEffect(() => {
     if (!productId) return;
     const loadItem = async () => {
@@ -164,8 +192,11 @@ function Checkout() {
             <motion.button
             whileHover={{scale:1.03}}
             whileTap={{scale:0.97}} 
+            onClick={handlePlaceOrder}
+            disabled={loading}
             className="w-full bg-gradient-to-r from-blue-600 to-indigo-600
             hover:opacity-90 py-4 rounded-2xl font-semibold text-white text-lg transition cursor-pointer">{
+              loading?<ClipLoader size={22} color="white"/>:
                 paymentMethod==="cod"
                 ? "Place Order"
                 : "Proceed to Secure Payment"
