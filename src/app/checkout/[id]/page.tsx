@@ -103,6 +103,7 @@ function Checkout() {
             className="w-full p-3 rounded-xl 
                 bg-black/60 border border-white/20 text-white placeholder-gray-400 
                 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:border-white/40 transition"
+                maxLength={10}
             onChange={(e) => setPhone(e.target.value)}
             value={phone}
           />
