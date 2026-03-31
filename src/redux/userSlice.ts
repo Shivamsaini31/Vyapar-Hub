@@ -1,7 +1,7 @@
 import { IOrder } from "@/model/order.model";
 import { IUser } from "@/model/user.model";
 import { createSlice } from "@reduxjs/toolkit";
-import { setAllProductsData } from "./vendorSlice";
+
 
 
 interface IUserData{
@@ -26,5 +26,5 @@ const userSlice= createSlice({
     },
 })
 
-export const {setUserData}= userSlice.actions;
+export const {setUserData, setAllOrdersData}= userSlice.actions;
 export default userSlice.reducer;

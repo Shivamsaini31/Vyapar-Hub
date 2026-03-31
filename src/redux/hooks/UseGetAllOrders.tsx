@@ -3,7 +3,7 @@ import {useEffect} from 'react'
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store';
 import axios from 'axios';
-import { setAllProductsData } from '../vendorSlice';
+import {setAllOrdersData} from "../userSlice"
 
 function UseGetAllOrders() {
     const dispatch=useDispatch<AppDispatch>();
@@ -12,10 +12,10 @@ function UseGetAllOrders() {
         try {
             const res=await axios.get("/api/order/getAllOrders");
             // console.log("products:", res.data);
-            if(res?.data)dispatch(setAllProductsData(res.data.orders));
+            if(res?.data)dispatch(setAllOrdersData(res.data.orders));
         } catch (error) {
             console.log(`Error fetching products: ${error}`);
-            dispatch(setAllProductsData([]));
+            dispatch(setAllOrdersData([]));
         }
     }
     fetchAllOrders();
