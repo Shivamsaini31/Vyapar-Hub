@@ -11,8 +11,8 @@ function UseGetAllOrders() {
     const fetchAllOrders=async()=>{
         try {
             const res=await axios.get("/api/order/getAllOrders");
-            // console.log("products:", res.data);
-            if(res?.data)dispatch(setAllOrdersData(res.data.orders));
+            if(res?.data)dispatch(setAllOrdersData(res.data));
+            // console.log(res?.data);
         } catch (error) {
             console.log(`Error fetching products: ${error}`);
             dispatch(setAllOrdersData([]));

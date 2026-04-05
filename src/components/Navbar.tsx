@@ -45,7 +45,7 @@ function Navbar({ user }: { user: IUser }) {
             <NavItem label="Home" path="/" router={router} />
             <NavItem label="Categories" path="/category" router={router} />
             <NavItem label="Shop" path="/shop" router={router} />
-            <NavItem label="Orders" path="/order" router={router} />
+            <NavItem label="Orders" path="/orders" router={router} />
           </div>
         )}
 
