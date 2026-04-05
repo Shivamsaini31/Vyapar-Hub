@@ -5,6 +5,7 @@ import { RootState } from '@/redux/store';
 import React from 'react'
 import { FiTruck } from 'react-icons/fi';
 import { useSelector } from 'react-redux'
+import {motion} from "motion/react";  
 
 function Orders() {
 
@@ -15,13 +16,6 @@ function Orders() {
     const orders=Array.isArray(allOrdersData)?
     allOrdersData.filter((o)=>String(o.buyer._id)===String(userData?._id)):[];
     console.log("orders: ",orders);
-    if(!orders){
-        return  <div className="min-h-screen flex items-center justify-center bg-linear-to-br
-    from-gray-900 via-black to-gray-900 text-white text-4xl">
-        Loading Orders...
-      
-    </div>
-    }
 
     const formatDate=(date:string)=>{
         if(!date) return "";
@@ -67,7 +61,7 @@ function Orders() {
 
                     </thead>
                     <tbody>
-                        {orders.map((o, i)=>(
+                        {orders.length!==0 ? (orders.map((o, i)=>(
                             <tr key={i} className='border-t border-white/5 hover:bg-white/10 transition-all duration-200'>
                                 <td className="px-4 py-4 text-sm">#{String(o._id)}</td>
                                 <td className="px-4 py-4 text-sm">{formatDate(String(o.createdAt))}</td>
@@ -82,7 +76,7 @@ function Orders() {
                                     
                                 </td>
                                 <td className="px-4 py-4 text-sm">{o.orderStatus.toUpperCase()}</td>
-                                <td className="px-4 py-4 text-right text-green-300 fornt-semibold">{o.totalAmount}</td>
+                                <td className="px-4 py-4 text-nowrap text-right text-green-300 font-semibold">₹ {o.totalAmount}</td>
                                 <td className="px-4 py-4 flex justify-center ">
                                     <div className="flex gap-2">
                                         <button className="px-3 py-1 bg-white/10 rounded hover:bg-white/20 cursor-pointer text-nowrap">Check Details</button>
@@ -92,10 +86,62 @@ function Orders() {
                                     </div>
                                 </td>
                         </tr>
-                        )) }
+                        ))):(
+                            <tr>
+                                <td colSpan={8} className="px-4 py-4 text-center text-gray-300">
+                                    No orders found!
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
+                
             </div>
+            <div className="lg:hidden space-y-4">
+                        {orders.length!==0?(
+                            orders.map((o,i)=>(
+                                <motion.div
+                                initial={{opacity:0, scale:0.95}}
+                                animate={{opacity:1, scale:1}}
+                                transition={{duration:0.4}}
+                                key={i}
+                                className=" bg-white/5 border border-white/10 rounded-xl
+                                p-4"><div className="flex justify-between">
+                                    <div>
+                                        <div className="text-sm text-gray-300">#{String(o._id)}</div>
+                                        <div className="text-xs text-gray-400">{formatDate(String(o.createdAt))}</div>
+                                        <div className="text-sm text-gray-300 mt-1">{o.productVendor.shopName}</div>
+                                    </div>
+                                    <div className="text-green-300 font-bold text-right">₹ {o.totalAmount}</div>
+                                </div>
+                                <div className="mt-3 flex justify-between">
+                                    <div >
+                                        <div className="text-md text-gray-400">Payment Method: {o.paymentMethod.toUpperCase()}</div>
+                                        <div className={`text-xs ${o.isPaid?"text-green-400":"text-yellow-400"}`}>
+                                            {o.isPaid? "Paid": "Pending"}
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <div className="text-xs text-gray-400">Status</div>
+                                        <div className="text-sm font-semibold" >{o.orderStatus.toUpperCase()}</div>
+                                    </div>
+                                </div>
+                                <div className="mt-3 space-y-1">
+                                    {o.products.map((p,i)=>(
+                                        <div key={i} className="text-gray-200">{p.product.title} x{p.quantity}</div>
+                                    ))}
+                                </div>
+                                <div className="mt-3 flex gap-2">
+                                    <button className="flex-1 py-2 bg-white/10 rounded">Check Details</button>
+                                    <button className="flex-1 py-2 bg-white/10 rounded  flex items-center justify-center gap-1"><FiTruck/> Track Order</button>
+                                </div>
+                                </motion.div>
+                            ))
+                        ):(
+                            <div className="text-xl text-center text-white bg-white/5 border border-white/10
+                            p-4 rounded-xl">No orders found!</div>
+                        )}
+                </div>
 
         </div>
       
