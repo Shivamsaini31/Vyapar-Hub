@@ -1,7 +1,7 @@
 npx create-next-app@latest 
 
 Packages and middlewares to be installed:
-npm i mongoose bcryptjs cookie-parser axios next-auth@beta motion react-icons react-spinners
+npm i mongoose bcryptjs cookie-parser axios next-auth@beta motion react-icons react-spinners nodemailer
 react-redux @reduxjs/toolkit cloudinary
 
 Start with creating required models(app/model)
