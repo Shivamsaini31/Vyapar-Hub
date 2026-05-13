@@ -4,6 +4,7 @@ import { IUser } from '@/model/user.model';
 import UseGetAllOrders from '@/redux/hooks/UseGetAllOrders';
 import UseGetCurrentUser from '@/redux/hooks/UseGetCurrentUser';
 import { AppDispatch, RootState } from '@/redux/store'
+import { setAllOrdersData } from '@/redux/userSlice';
 import axios from 'axios';
 import { AnimatePresence , motion} from 'motion/react';
 import React, { useState } from 'react'
@@ -20,6 +21,18 @@ function VendorOrders() {
     allOrdersData.filter((o)=>String(o.productVendor._id)===String(userData?._id)):[];
 
     const statusOptions=["pending", "confirmed", "shipped", "delivered"];
+    const updateStatus= async(orderId:string, status:string)=>{
+      try {
+        await axios.post("/api/order/update-status", {orderId, status});
+        dispatch(setAllOrdersData(allOrdersData.map((o:any)=>(
+          o._id===orderId ? {...o, orderStatus:status}
+          : o
+        ))));
+        alert("Order status updated...")
+      } catch (error) {
+        console.log("Error updating order status: ", error);
+      }
+    }
  
 
   return (
@@ -68,7 +81,9 @@ function VendorOrders() {
                   </td>
                   <td className="p-4">{order.orderStatus.toUpperCase()}</td>
                   <td className="p-4">
-                    <select value={order.orderStatus} className="bg-white/10 border border/white-20 rounded px-2 py-1 ">
+                    <select 
+                    onChange={async(e)=>{updateStatus(String(order._id), e.target.value)}}
+                    value={order.orderStatus} className="bg-white/10 border border/white-20 rounded px-2 py-1 ">
                     {statusOptions.map((s,i)=>(
                       <option key={i} value={s} className="bg-black text-center">{s}</option>
                     ))}</select>
@@ -115,7 +130,9 @@ function VendorOrders() {
               <b>Status:</b>{" "}
               <span className="capitalize">{order.orderStatus}</span>
             </div>
-             <select value={order.orderStatus} className="bg-white/10 border border/white-20 rounded px-2 py-1 w-full">
+             <select 
+             onChange={async(e)=>{updateStatus(String(order._id), e.target.value)}}
+             value={order.orderStatus} className="bg-white/10 border border/white-20 rounded px-2 py-1 w-full">
                     {statusOptions.map((s,i)=>(
                       <option key={i} value={s} className="bg-black text-center">{s}</option>
                     ))}</select>
