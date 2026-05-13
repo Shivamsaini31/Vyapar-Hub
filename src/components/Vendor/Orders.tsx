@@ -15,6 +15,8 @@ function VendorOrders() {
   const dispatch= useDispatch<AppDispatch>(); 
       UseGetCurrentUser();
     UseGetAllOrders();
+    const [otpModel, setOtpModel]=useState<any|null>(null);
+    const [otp, setOtp]= useState("");
     const {allOrdersData}=useSelector((state:RootState)=>state.user);
     const {userData}=useSelector((state:RootState)=>state.user);
     const orders=Array.isArray(allOrdersData)?
@@ -25,12 +27,29 @@ function VendorOrders() {
       try {
         await axios.post("/api/order/update-status", {orderId, status});
         dispatch(setAllOrdersData(allOrdersData.map((o:any)=>(
-          o._id===orderId ? {...o, orderStatus:status}
+          o._id===orderId && status!=="delivered" ? {...o, orderStatus:status}
           : o
         ))));
-        alert("Order status updated...")
+        if(status==="delivered") return ;
+        alert("Order status updated...");
       } catch (error) {
         console.log("Error updating order status: ", error);
+      }
+    }
+    const verifyOtp= async()=>{
+      try {
+        const res=await axios.post("/api/order/verify-delivery-otp",{orderId: otpModel._id, otp});
+        // console.log(res);
+        dispatch(setAllOrdersData(allOrdersData.map((o:any)=>(
+          o._id===otpModel._id ?{...o, orderStatus: "delivered"}: o
+        ))));
+        alert("Order delivered✅");
+        setOtpModel(null);
+        setOtp("");
+
+      } catch (error) {
+        console.log("Error updating delivery status: ", error);
+        alert("Order delivery Error");
       }
     }
  
@@ -82,7 +101,11 @@ function VendorOrders() {
                   <td className="p-4">{order.orderStatus.toUpperCase()}</td>
                   <td className="p-4">
                     <select 
-                    onChange={async(e)=>{updateStatus(String(order._id), e.target.value)}}
+                    onChange={async(e)=>{if(e.target.value==="delivered"){
+                updateStatus(String(order._id), "delivered");
+                setOtpModel(order);
+              } else {
+              updateStatus(String(order._id), e.target.value)}}}
                     value={order.orderStatus} className="bg-white/10 border border/white-20 rounded px-2 py-1 ">
                     {statusOptions.map((s,i)=>(
                       <option key={i} value={s} className="bg-black text-center">{s}</option>
@@ -131,7 +154,12 @@ function VendorOrders() {
               <span className="capitalize">{order.orderStatus}</span>
             </div>
              <select 
-             onChange={async(e)=>{updateStatus(String(order._id), e.target.value)}}
+             onChange={async(e)=>{
+              if(e.target.value==="delivered"){
+                updateStatus(String(order._id), "delivered");
+                setOtpModel(order);
+              } else{
+              updateStatus(String(order._id), e.target.value)}}}
              value={order.orderStatus} className="bg-white/10 border border/white-20 rounded px-2 py-1 w-full">
                     {statusOptions.map((s,i)=>(
                       <option key={i} value={s} className="bg-black text-center">{s}</option>
@@ -141,6 +169,26 @@ function VendorOrders() {
           
 
         </div>
+        {otpModel &&(
+          <div className="inset-0 fixed bg-black/70 flex items-center justify-center p-4 z-50">
+            <div className="bg-[#061526] p-6 rounded-xl w-full max-w-md">
+              <div className="flex justify-between mb-3">
+              <h2 className="text-lg font-semibold">Enter Delivery OTP</h2>
+              <button onClick={()=>{setOtpModel(null); setOtp("")}}
+              className="p-2 rounded-xl bg-white/10 border border-white/20">x</button>
+              </div>
+              
+              <input type="text" className="w-full bg-white/10 border border-white/20 px-4 py-2 rounded mb-4"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e)=>setOtp(e.target.value)}
+              />
+              <button onClick={verifyOtp} className="w-full bg-green-600 py-2 rounded flex items-center justify-center gap-2">
+                Verify & Deliver
+              </button>
+            </div>
+          </div>
+        )}
         
        
       

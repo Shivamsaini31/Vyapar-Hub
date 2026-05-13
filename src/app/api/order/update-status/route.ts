@@ -9,6 +9,7 @@ export async function POST(req: NextRequest){
         await connectDB();
         const {orderId, status}= await req.json();
         const order= await Order.findById(orderId).populate("buyer");
+        // console.log(order);
         if(!order){
             return NextResponse.json({message:"Order not found!"},{status: 404});
 
@@ -23,6 +24,8 @@ export async function POST(req: NextRequest){
             order.deliveryOtp= otp;
             order.otpExpiresAt= new Date(Date.now()+10*60*1000);
             await order.save();
+            console.log(order.deliveryOtp);
+            
             const email= order.buyer?.email;
             if(!email){
                 return NextResponse.json({message:"Buyer mail not found"},{
@@ -35,6 +38,7 @@ export async function POST(req: NextRequest){
         return NextResponse.json({message:"Invalid status"}, {status:400});
 
     } catch (error) {
+        console.log(error);
         return NextResponse.json({message:`Failed to update order status:${error}`}, {status:500})
     }
 }

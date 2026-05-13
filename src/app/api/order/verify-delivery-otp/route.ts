@@ -14,7 +14,12 @@ export async function POST(req:NextRequest){
         if(!order){
             return NextResponse.json({message:"Order does not exist."}, {status:404});
         }
+        // console.log(orderId);
+        // console.log(order._id);
+        console.log(order.deliveryOtp);
+        // console.log(otp);
         if(order.deliveryOtp !==otp || !order.otpExpiresAt || order.otpExpiresAt<new Date()){
+            
             return NextResponse.json({message:"Invalid or expired otp"},{status:400});
         }
         order.orderStatus="delivered";
@@ -25,6 +30,7 @@ export async function POST(req:NextRequest){
         await order.save();
         return NextResponse.json({message:"Order delivered!"}, {status:200});
     } catch (error) {
+        console.log(error);
         return NextResponse.json({message:`Error updating Order delivery status: ${error}`}, {status:500});
     }
 }
